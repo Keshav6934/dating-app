@@ -1,15 +1,13 @@
 ﻿using API.Data;
 using API.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class MembersController(AppDbContext context) : ControllerBase
+    
+    public class MembersController(AppDbContext context) : BaseApiController
     {
         // GET: api/<ValuesController>
         [HttpGet]
@@ -20,8 +18,8 @@ namespace API.Controllers
 
             return members;
         }
-        
-        // GET api/<ValuesController>/5
+
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<ActionResult<AppUser>> GetMember(string id)
         {
