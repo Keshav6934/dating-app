@@ -21,4 +21,12 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="client\src\core\" />
+    <Folder Include="client\src\features\" />
+    <Folder Include="client\src\layout\" />
+    <Folder Include="client\src\shared\" />
+    <Folder Include="client\src\types\" />
+  </ItemGroup>
+
 </Project>
