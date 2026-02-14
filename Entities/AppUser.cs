@@ -1,4 +1,5 @@
-﻿using API.DTOs;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using API.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Entities
@@ -8,11 +9,12 @@ namespace API.Entities
         public string Id { get; set; } = Guid.NewGuid().ToString();
         public required string DisplayName { get; set; }
         public required string Email { get; set; }
-
+        public string? ImageUrl { get; set; }
         public required byte[] PasswordHash {  get; set; }
 
         public required byte[] PasswordSalt {  get; set; }
 
-       
+        // Nav property
+        public  Member? Member { get; set; }
     }
 }
