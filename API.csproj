@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <None Remove="client\src\types\error.ts" />
+    <None Remove="client\src\types\member.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,12 +29,12 @@
   <ItemGroup>
     <Folder Include="client\src\core\" />
     <Folder Include="client\src\features\" />
-    <Folder Include="client\src\layout\" />
     <Folder Include="client\src\shared\" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="client\src\types\error.ts" />
+    <TypeScriptCompile Include="client\src\types\member.ts" />
   </ItemGroup>
 
 </Project>
