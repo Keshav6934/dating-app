@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.28.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.2" />
@@ -30,6 +31,7 @@
     <Folder Include="client\src\core\" />
     <Folder Include="client\src\features\" />
     <Folder Include="client\src\shared\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 
   <ItemGroup>
