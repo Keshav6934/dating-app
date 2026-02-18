@@ -1,5 +1,42 @@
-<div class=" mt-24 pl-6 grid grid-cols-5 gap-6">
-    @for (member of members$ | async; track member.id){
-    <app-member-card [member]="member" />
-    }
-</div>>
+@if(paginatedMembers(); as paginatedResult){
+    <div class="pt-24 px-6 w-full flex flex-col">
+        
+        <div class="flex justify-between items-center mb-2">
+            
+            <div class="flex gap-3 items-center">
+                <button (click)="openModal()" class="btn btn-primary normal-case">Select Filters</button>
+                <button (click)="resetFilters()" class="btn btn-neutral normal-case">Reset Filters</button>
+                
+                <div class="text-sm bg-base-100 px-4 border border-base-300 rounded-lg text-primary capitalize font-medium flex items-center h-[48px] min-w-fit">
+                    {{displayMessage}}
+                </div>
+            </div>
+
+            @if(paginatedResult.metaData; as metaData){
+                <div class="flex items-center">
+                    <app-paginator 
+                        [pageNumber]="metaData.currentPage"
+                        [totalCount]="metaData.totalCount"
+                        [totalPages]="metaData.totalPages"
+                        [pageSize]="metaData.pageSize"
+                        (pageChange)="onPageChange($event)"
+                    />
+                </div>
+            }
+        </div>
+
+        @if (paginatedResult.items; as members) {
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-0">
+                @for (member of members; track member.id){
+                    <app-member-card [member]="member" />
+                }
+            </div>
+        }
+    </div>
+}
+
+<app-filter-modal 
+    #filterModal
+    (closeModal)="onClose()"
+    (submitData)="onFilterChange($event)"    
+/>

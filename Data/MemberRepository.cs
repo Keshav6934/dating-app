@@ -1,6 +1,8 @@
 using System;
 using API.Entities;
+using API.Helpers;
 using API.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
@@ -9,7 +11,8 @@ public class MemberRepository(AppDbContext context) : IMemberRepository
 {
     public async Task<Member?> GetMemberByIdAsync(string id)
     {
-        return await context.Members.FindAsync(id);
+        var user =  await context.Users.Include(x=> x.Member).FirstAsync(x=>x.Id == id);
+        return await context.Members.FindAsync(user?.Member?.Id);
     }
 
     public async Task<Member?> GetMemberForUpdate(string id)
@@ -20,9 +23,29 @@ public class MemberRepository(AppDbContext context) : IMemberRepository
         .SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<IReadOnlyList<Member>> GetMembersAsync()
+    public async Task<PaginatedResult<Member>> GetMembersAsync(MemberParams memberParams)
     {
-        return await context.Members.ToListAsync();
+        var query = context.Members.AsQueryable();
+
+        query = query.Where(x => x.Id != memberParams.CurrentMemberId);
+
+        if(memberParams.Gender != null)
+        {
+            query = query.Where(x => x.Gender == memberParams.Gender);
+        }
+
+        var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-memberParams.MaxAge - 1 ));
+        var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-memberParams.MinAge));
+
+        query = query.Where(x => x.DateOfBirth >= minDob && x.DateOfBirth <= maxDob);
+
+        query = memberParams.OrderBy switch
+        {
+            "created" => query.OrderByDescending(x => x.LastActive), 
+                _ => query.OrderByDescending(x => x.LastActive)
+        };
+
+        return await PaginationHelper.CreateAsync(query, memberParams.PageNumber, memberParams.PageSize);
     }
 
     public async Task<IReadOnlyList<Photo>> GetPhotosForMemberAsync(string memberId)

@@ -49,3 +49,4 @@ public class PhotoService : IPhotoService
         return uploadResult;
     }
 }
+

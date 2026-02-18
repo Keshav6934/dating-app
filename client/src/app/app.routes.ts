@@ -29,7 +29,7 @@ export const routes: Routes = [
                 runGuardsAndResolvers: 'always',
                 component: MemberDetailed,
                 children: [
-                    {path: '', redirectTo: 'profile', pathMatch: 'full'},
+                    {path: '', redirectTo: '', pathMatch: 'full'},
                     {path: 'profile', component: MemberProfile, title: 'Profile',
                         canDeactivate: [preventUnsavedChangesGuard]},
                     {path: 'photos', component: MemberPhotos, title: 'Photos'},
@@ -44,3 +44,6 @@ export const routes: Routes = [
     { path: 'server-error', component: ServerError },
     { path: '**', component: NotFound },
 ];
+
+
+
