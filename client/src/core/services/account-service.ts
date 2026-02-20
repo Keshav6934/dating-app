@@ -15,38 +15,68 @@ export class AccountService {
 
   private baseUrl = environment.apiUrl;
 
- register(creds: RegisterCreds){
-  return this.http.post<User>(this.baseUrl + 'account/register', creds).pipe(
-      tap(user => {
-        if (user){
-          this.setCurrentUser(user)
-        }
-      })
-    )
- }
+  register(creds: RegisterCreds) {
+    return this.http.post<User>(this.baseUrl + 'account/register', creds,
+      { withCredentials: true }).pipe(
+        tap(user => {
+          if (user) {
+            this.setCurrentUser(user);
+            this.startTokenRefreshInterval();
+          }
+        })
+      )
+  }
 
-  login(creds:LoginCreds){
-    return this.http.post<User>(this.baseUrl+'account/login', creds).pipe(
-      tap(user => {
-        if (user){
-          this.setCurrentUser(user)
-        }
-      })
-    )
+  login(creds: LoginCreds) {
+    return this.http.post<User>(this.baseUrl + 'account/login', creds,
+      { withCredentials: true }).pipe(
+        tap(user => {
+          if (user) {
+            this.setCurrentUser(user);
+            this.startTokenRefreshInterval();
+
+          }
+        })
+      )
+  }
+
+  refreshToken() {
+    return this.http.post<User>(this.baseUrl + 'account/refresh-token', {},
+      { withCredentials: true })
+  }
+
+  startTokenRefreshInterval() {
+    setInterval(() => {
+      this.http.post<User>(this.baseUrl + 'account/refresh-token', {},
+        { withCredentials: true }).subscribe({
+          next: user => {
+            this.setCurrentUser(user)
+          },
+          error: () => {
+            this.logout()
+          }
+        })
+    }, 14 * 24 * 60 * 60 * 1000) // 14 days
   }
 
 
   setCurrentUser(user: User){
-    localStorage.setItem('user',JSON.stringify(user))
+    user.roles = this.getRolesFromToken(user);
       this.currentUser.set(user);
       this.likesService.getLikesIds();
   }
 
   logout(){
-    localStorage.removeItem('user');
     localStorage.removeItem('filters');
     this.likesService.clearLikeIds();
     this.currentUser.set(null);
+  }
+
+  private getRolesFromToken(user: User): string[] {
+    const payLoad = user.token.split('.')[1];
+    const decoded = atob(payLoad);
+    const jsonPayLoad = JSON.parse(decoded);
+    return Array.isArray(jsonPayLoad.role) ? jsonPayLoad.role : [jsonPayLoad.role]
   }
 }
 

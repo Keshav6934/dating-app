@@ -5,10 +5,11 @@ import { Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { ToastService } from '../../core/services/toast-service';
 import { themes } from '../theme';
 import { BusyService } from '../../core/services/busy-service';
+import { HasRole } from '../../shared/directives/has-role';
 
 @Component({
   selector: 'app-nav',
-  imports: [FormsModule, RouterLink, RouterLinkActive],
+  imports: [FormsModule, RouterLink, RouterLinkActive, HasRole],
   templateUrl: './nav.html',
   styleUrl: './nav.css',
 })
@@ -22,6 +23,7 @@ export class Nav implements OnInit {
   protected themes = themes;
 
   ngOnInit(): void {
+    debugger
     document.documentElement.setAttribute('data-theme', this.selectedTheme());
   }
 
