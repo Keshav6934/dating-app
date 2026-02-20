@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
-import { Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ToastService } from '../../core/services/toast-service';
 import { themes } from '../theme';
 import { BusyService } from '../../core/services/busy-service';
@@ -11,7 +11,7 @@ import { HasRole } from '../../shared/directives/has-role';
   selector: 'app-nav',
   imports: [FormsModule, RouterLink, RouterLinkActive, HasRole],
   templateUrl: './nav.html',
-  styleUrl: './nav.css',
+  styleUrl: './nav.css'
 })
 export class Nav implements OnInit {
   protected accountService = inject(AccountService);
@@ -21,13 +21,13 @@ export class Nav implements OnInit {
   protected creds: any = {}
   protected selectedTheme = signal<string>(localStorage.getItem('theme') || 'light');
   protected themes = themes;
+  protected loading = signal(false);
 
   ngOnInit(): void {
-    debugger
     document.documentElement.setAttribute('data-theme', this.selectedTheme());
   }
 
-  handleSelectedTheme(theme: string){
+  handleSelectTheme(theme: string) {
     this.selectedTheme.set(theme);
     localStorage.setItem('theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
@@ -35,24 +35,28 @@ export class Nav implements OnInit {
     if (elem) elem.blur();
   }
 
+  handleSelectUserItem() {
+    const elem = document.activeElement as HTMLDivElement;
+    if (elem) elem.blur();
+  }
 
-  login(){
+  login() {
+    this.loading.set(true);
     this.accountService.login(this.creds).subscribe({
       next: () => {
         this.router.navigateByUrl('/members');
         this.toast.success('Logged in successfully');
         this.creds = {};
       },
-      error: response => {
-        console.log(response);
-        this.toast.error(response.error);
-      }
+      error: error => {
+        this.toast.error(error.error);
+      },
+      complete: () => this.loading.set(false)
     })
   }
 
-  logout(){
+  logout() {
     this.accountService.logout();
-        this.router.navigateByUrl('/');
-
+    this.router.navigateByUrl('/');
   }
 }

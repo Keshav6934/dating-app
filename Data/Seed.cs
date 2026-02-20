@@ -13,18 +13,18 @@ public class Seed
 {
     public static async Task SeedUsers(UserManager<AppUser> userManager)
     {
-        if(await userManager.Users.AnyAsync()) return;
-        
+        if (await userManager.Users.AnyAsync()) return;
+
         var memberData = await File.ReadAllTextAsync("Data/UserSeedData.json");
         var members = JsonSerializer.Deserialize<List<SeedUserDto>>(memberData);
 
-        if(members == null)
+        if (members == null)
         {
             Console.WriteLine("No members in seed data");
             return;
         }
 
-        foreach(var member in members)
+        foreach (var member in members)
         {
             var user = new AppUser
             {
@@ -51,16 +51,15 @@ public class Seed
             user.Member.Photos.Add(new Photo
             {
                 Url = member.ImageUrl!,
-                MemberId = member.Id
+                MemberId = member.Id,
+                IsApproved = true
             });
 
             var result = await userManager.CreateAsync(user, "Pa$$w0rd");
-
             if (!result.Succeeded)
             {
                 Console.WriteLine(result.Errors.First().Description);
             }
-
             await userManager.AddToRoleAsync(user, "Member");
         }
 

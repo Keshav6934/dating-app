@@ -1,15 +1,16 @@
-<div class="mt-12"> 
-    <div class="flex justify-center gap-3 pt-10">
-        <button class="btn btn-neutral" (click)="get500Error()">Test 500 Error</button>
-        <button class="btn btn-accent" (click)="get400Error()">Test 400 Error</button>
-        <button class="btn btn-secondary" (click)="get401Error()">Test 401 Error</button>
-        <button class="btn btn-success" (click)="get404Error()">Test 404 Error</button>
-        <button class="btn btn-info" (click)="get400ValidationError()">Test 400 Validation Error</button>
+<div class="flex flex-col w-full px-2 pt-0 -mt-4"> 
+    
+    <div class="flex justify-center gap-2 pt-0">
+        <button class="btn btn-neutral btn-sm" (click)="get500Error()">Test 500 Error</button>
+        <button class="btn btn-accent btn-sm" (click)="get400Error()">Test 400 Error</button>
+        <button class="btn btn-secondary btn-sm" (click)="get401Error()">Test 401 Error</button>
+        <button class="btn btn-success btn-sm" (click)="get404Error()">Test 404 Error</button>
+        <button class="btn btn-info btn-sm" (click)="get400ValidationError()">Test 400 Validation Error</button>
     </div>
 
     @if (validationErrors().length > 0){
-        <div class="card bg-base-100 flex mt-5 rounded-2xl w-1/2 p-3 mx-auto">
-            <ul class="flex flex-col text-red-600 space-y-2">
+        <div class="card bg-base-100 flex mt-2 rounded-xl w-full max-w-md p-3 mx-auto shadow-sm border border-base-200">
+            <ul class="flex flex-col text-red-600 space-y-1 text-xs">
                 @for (error of validationErrors(); track $index) {
                     <li>{{error}}</li>
                 }

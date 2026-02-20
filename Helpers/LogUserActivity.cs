@@ -12,14 +12,15 @@ public class LogUserActivity : IAsyncActionFilter
     {
         var resultContext = await next();
 
-        if(context.HttpContext.User.Identity?.IsAuthenticated != true) return;
+        if (context.HttpContext.User.Identity?.IsAuthenticated != true) return;
 
         var memberId = resultContext.HttpContext.User.GetMemberId();
 
         var dbContext = resultContext.HttpContext.RequestServices
             .GetRequiredService<AppDbContext>();
-        
-        await dbContext.Members.Where(x => x.Id == memberId)
-                .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.LastActive, DateTime.UtcNow));
+
+        await dbContext.Members
+            .Where(x => x.Id == memberId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(x => x.LastActive, DateTime.UtcNow));
     }
 }

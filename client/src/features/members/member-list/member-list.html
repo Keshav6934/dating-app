@@ -1,32 +1,23 @@
 @if(paginatedMembers(); as paginatedResult){
-    <div class=" w-full flex flex-col">
-        
-        <div class="flex justify-between items-center mb-2">
-            
-            <div class="flex gap-3 items-center">
-                <button (click)="openModal()" class="btn btn-primary normal-case">Select Filters</button>
-                <button (click)="resetFilters()" class="btn btn-neutral normal-case">Reset Filters</button>
-                
-                <div class="text-sm bg-base-100 px-4 border border-base-300 rounded-lg text-primary capitalize font-medium flex items-center h-[48px] min-w-fit">
+    <div class="w-full flex flex-col px-2 -mt-4 pb-2"> 
+        <div class="flex justify-between items-center mb-2"> 
+            <div class="flex gap-2 items-center">
+                <button (click)="openModal()" class="btn btn-primary btn-sm normal-case">Select Filters</button>
+                <button (click)="resetFilters()" class="btn btn-neutral btn-sm normal-case">Reset Filters</button>
+                <div class="text-xs bg-base-100 px-3 border border-base-300 rounded-lg text-primary flex items-center h-[34px] shadow-sm">
                     {{displayMessage}}
                 </div>
             </div>
 
             @if(paginatedResult.metaData; as metaData){
-                <div class="flex items-center">
-                    <app-paginator 
-                        [pageNumber]="metaData.currentPage"
-                        [totalCount]="metaData.totalCount"
-                        [totalPages]="metaData.totalPages"
-                        [pageSize]="metaData.pageSize"
-                        (pageChange)="onPageChange($event)"
-                    />
+                <div class="scale-90 origin-right">
+                    <app-paginator [pageNumber]="metaData.currentPage" [totalCount]="metaData.totalCount" [totalPages]="metaData.totalPages" [pageSize]="metaData.pageSize" (pageChange)="onPageChange($event)" />
                 </div>
             }
         </div>
 
         @if (paginatedResult.items; as members) {
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-0">
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                 @for (member of members; track member.id){
                     <app-member-card [member]="member" />
                 }
@@ -34,9 +25,3 @@
         }
     </div>
 }
-
-<app-filter-modal 
-    #filterModal
-    (closeModal)="onClose()"
-    (submitData)="onFilterChange($event)"    
-/>

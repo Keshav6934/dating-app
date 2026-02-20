@@ -1,6 +1,7 @@
 @if (paginatedResult(); as paginatedResult) {
-    <div class="flex flex-col w-full">
-        <div class="flex justify-between items-center">
+    <div class="flex flex-col w-full px-2 -mt-4 pb-2">
+        
+        <div class="flex justify-between items-center mb-6">
             <div class="tabs tabs-box tabs-lg text-primary w-fit">
                 @for (tab of tabs; track $index) {
                     <button role="tab" class="tab" 
@@ -11,29 +12,44 @@
                     </button>
                 }
             </div>
+
             @if (paginatedResult.metadata; as metadata) {
-                <app-paginator 
-                    [hidden]="metadata.totalCount !== 0"
-                    [pageNumber]="metadata.currentPage"
-                    [pageSize]="metadata.pageSize"
-                    [totalCount]="metadata.totalCount"
-                    [totalPages]="metadata.totalPages"
-                    (pageChange)="onPageChange($event)"
-                />
+                <div class="flex items-center scale-90 md:scale-100">
+                    <app-paginator 
+                        [pageNumber]="metadata.currentPage"
+                        [pageSize]="metadata.pageSize"
+                        [totalCount]="metadata.totalCount"
+                        [totalPages]="metadata.totalPages"
+                        (pageChange)="onPageChange($event)"
+                    />
+                </div>
             }
         </div>
+
         @if (paginatedResult.items; as members) {
             @if (members.length > 0) {
-                <div class="grid grid-cols-5 gap-6 mt-3">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                     @for (member of members; track member.id) {
                         <app-member-card [member]="member" />
                     }
                 </div>
+
+                @if (paginatedResult.metadata; as metadata) {
+                    <div class="flex justify-center mt-10">
+                        <app-paginator 
+                            [pageNumber]="metadata.currentPage"
+                            [pageSize]="metadata.pageSize"
+                            [totalCount]="metadata.totalCount"
+                            [totalPages]="metadata.totalPages"
+                            (pageChange)="onPageChange($event)"
+                        />
+                    </div>
+                }
             } @else {
-                <div class="mt-3 text-lg">There are no results for this filter</div>
+                <div class="mt-10 text-center text-lg opacity-50">
+                    There are no results for this filter
+                </div>
             }
         }
     </div>
 }
-
-

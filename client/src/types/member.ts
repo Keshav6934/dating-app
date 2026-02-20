@@ -8,7 +8,7 @@
     gender: string
     description?: string
     city: string
-    county: string
+    country: string
 }
 
 export type Photo = {
@@ -16,6 +16,7 @@ export type Photo = {
     url: string
     publicId?: string
     memberId: string
+    isApproved: boolean
 }
 
 export type EditableMember = {

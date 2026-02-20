@@ -36,6 +36,7 @@
     <Folder Include="client\src\core\" />
     <Folder Include="client\src\shared\" />
     <Folder Include="Helpers\" />
+    <Folder Include="SignalR\" />
   </ItemGroup>
 
   <ItemGroup>

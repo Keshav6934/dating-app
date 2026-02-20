@@ -8,24 +8,22 @@ import { FilterModal } from '../filter-modal/filter-modal';
 
 @Component({
   selector: 'app-member-list',
-  standalone: true,
-  imports: [MemberCard, Paginator, FilterModal],
+  imports: [MemberCard, Paginator],
   templateUrl: './member-list.html',
-  styleUrl: './member-list.css',
+  styleUrl: './member-list.css'
 })
 export class MemberList implements OnInit {
   @ViewChild('filterModal') modal!: FilterModal;
   private memberService = inject(MemberService);
   protected paginatedMembers = signal<PaginatedResult<Member> | null>(null);
   protected memberParams = new MemberParams();
-  protected updatedParams = new MemberParams();
+  private updatedParams = new MemberParams();
 
   constructor() {
     const filters = localStorage.getItem('filters');
     if (filters) {
-      const parsed = JSON.parse(filters);
-      this.memberParams = parsed;
-      this.updatedParams = parsed;
+      this.memberParams = JSON.parse(filters);
+      this.updatedParams = JSON.parse(filters)
     }
   }
 
@@ -36,12 +34,12 @@ export class MemberList implements OnInit {
   loadMembers() {
     this.memberService.getMembers(this.memberParams).subscribe({
       next: result => {
-        this.paginatedMembers.set(result);
+        this.paginatedMembers.set(result)
       }
-    });
+    })
   }
 
-  onPageChange(event: { pageNumber: number, pageSize: number }) {
+  onPageChange(event: {pageNumber: number, pageSize: number}) {
     this.memberParams.pageSize = event.pageSize;
     this.memberParams.pageNumber = event.pageNumber;
     this.loadMembers();
@@ -52,46 +50,40 @@ export class MemberList implements OnInit {
   }
 
   onClose() {
-    console.log('Modal closed');
+    console.log('Modal closed')
   }
 
   onFilterChange(data: MemberParams) {
-    this.memberParams = { ...data };
-    this.updatedParams = { ...data };
+    this.memberParams = {...data};
+    this.updatedParams = {...data};
     this.loadMembers();
   }
 
   resetFilters() {
-    const freshParams = new MemberParams();
-    freshParams.minAge = 18;
-    freshParams.maxAge = 100;
-    
-    this.memberParams = { ...freshParams };
-    this.updatedParams = { ...freshParams };
-    
-    if (this.modal) {
-      this.modal.memberParams.set({ ...freshParams });
-    }
-
-    localStorage.removeItem('filters');
+    this.memberParams = new MemberParams();
+    this.updatedParams = new MemberParams();
     this.loadMembers();
   }
 
   get displayMessage(): string {
+    const defaultParams = new MemberParams();
+
     const filters: string[] = [];
 
     if (this.updatedParams.gender) {
-      filters.push(this.updatedParams.gender === 'male' ? 'Males' : 'Females');
+      filters.push(this.updatedParams.gender + 's')
     } else {
       filters.push('Males, Females');
     }
-
-    if (this.updatedParams.minAge !== 18 || this.updatedParams.maxAge !== 100) {
-      filters.push(`Ages ${this.updatedParams.minAge} - ${this.updatedParams.maxAge}`);
+    
+    if (this.updatedParams.minAge !== defaultParams.minAge 
+        || this.updatedParams.maxAge !== defaultParams.maxAge) {
+        filters.push(` ages ${this.updatedParams.minAge}-${this.updatedParams.maxAge}`)
     }
 
-    filters.push(this.updatedParams.orderBy === 'lastActive' ? 'Recently active' : 'Newest members');
-
-    return `Selected: ${filters.join(' | ')}`;
+    filters.push(this.updatedParams.orderBy === 'lastActive' 
+        ? 'Recently active' : 'Newest members');
+    
+    return filters.length > 0 ? `Selected: ${filters.join('  | ')}` : 'All members'
   }
 }

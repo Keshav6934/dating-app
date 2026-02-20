@@ -36,7 +36,7 @@ export class MemberProfile implements OnInit, OnDestroy {
       displayName: this.memberService.member()?.displayName || '',
       description: this.memberService.member()?.description || '',
       city: this.memberService.member()?.city || '',
-      country: this.memberService.member()?.county || '',
+      country: this.memberService.member()?.country || '',
     }
   }
 
