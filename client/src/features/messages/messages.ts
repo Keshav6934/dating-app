@@ -3,14 +3,15 @@ import { MessageService } from '../../core/services/message-service';
 import { PaginatedResult } from '../../types/pagination';
 import { Message } from '../../types/message';
 import { Paginator } from "../../shared/paginator/paginator";
-import { RouterLink } from "@angular/router";
+import { RouterLink } from '@angular/router';
+import { DatePipe } from '@angular/common';
 import { ConfirmDialogService } from '../../core/services/confirm-dialog-service';
 
 @Component({
   selector: 'app-messages',
-  imports: [Paginator, RouterLink],
+  imports: [Paginator, RouterLink, DatePipe],
   templateUrl: './messages.html',
-  styleUrl: './messages.css',
+  styleUrl: './messages.css'
 })
 export class Messages implements OnInit {
   private messageService = inject(MessageService);

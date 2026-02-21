@@ -5,7 +5,6 @@ import { MemberDetailed } from '../features/members/member-detailed/member-detai
 import { Lists } from '../features/lists/lists';
 import { Messages } from '../features/messages/messages';
 import { authGuard } from '../core/guards/auth-guard';
-import { TestBed } from '@angular/core/testing';
 import { TestErrors } from '../features/test-errors/test-errors';
 import { NotFound } from '../shared/errors/not-found/not-found';
 import { ServerError } from '../shared/errors/server-error/server-error';
@@ -31,11 +30,13 @@ export const routes: Routes = [
                 runGuardsAndResolvers: 'always',
                 component: MemberDetailed,
                 children: [
-                    {path: '', redirectTo: '', pathMatch: 'full'},
-                    {path: 'profile', component: MemberProfile, title: 'Profile',
-                        canDeactivate: [preventUnsavedChangesGuard]},
-                    {path: 'photos', component: MemberPhotos, title: 'Photos'},
-                    {path: 'messages', component: MemberMessages, title: 'Messages'},
+
+                    { path: '', redirectTo: 'profile', pathMatch: 'full' },
+                    
+                    { path: 'profile', component: MemberProfile, title: 'Profile',
+                        canDeactivate: [preventUnsavedChangesGuard] },
+                    { path: 'photos', component: MemberPhotos, title: 'Photos' },
+                    { path: 'messages', component: MemberMessages, title: 'Messages' },
                 ]
              },
             { path: 'lists', component: Lists },
@@ -45,8 +46,5 @@ export const routes: Routes = [
     },
     { path: 'errors', component: TestErrors },
     { path: 'server-error', component: ServerError },
-    { path: '**', component: NotFound },
+    { path: '**', component: NotFound, pathMatch: 'full' },
 ];
-
-
-
