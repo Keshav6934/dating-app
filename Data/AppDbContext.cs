@@ -17,7 +17,7 @@ public class AppDbContext(DbContextOptions options) : IdentityDbContext<AppUser>
     public DbSet<Group> Groups { get; set; }
     public DbSet<Connection> Connections { get; set; }
 
-    // Sirf ye method add kiya hai warning ko ignore karne ke liye
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
@@ -27,7 +27,29 @@ public class AppDbContext(DbContextOptions options) : IdentityDbContext<AppUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<AppUser>(entity =>
+        {
+            entity.Property(e => e.Id)
+                  .HasMaxLength(128);
+        });
 
+        modelBuilder.Entity<IdentityRole>(entity =>
+        {
+            entity.Property(e => e.Id)
+                  .HasMaxLength(128);
+        });
+
+        modelBuilder.Entity<IdentityUserLogin<string>>(entity =>
+        {
+            entity.Property(e => e.LoginProvider).HasMaxLength(128);
+            entity.Property(e => e.ProviderKey).HasMaxLength(128);
+        });
+
+        modelBuilder.Entity<IdentityUserToken<string>>(entity =>
+        {
+            entity.Property(e => e.LoginProvider).HasMaxLength(128);
+            entity.Property(e => e.Name).HasMaxLength(128);
+        });
         modelBuilder.Entity<Photo>().HasQueryFilter(x => x.IsApproved);
 
         modelBuilder.Entity<IdentityRole>()

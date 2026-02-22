@@ -1,6 +1,6 @@
 <div class="flex flex-col w-full">
   <div class="flex justify-between items-center">
-    <div class="tabs tabs-box tabs-lg text-primary w-fit">
+    <div class="tabs tabs-box tabs-lg px-2 text-primary w-fit">
       @for (tab of tabs; track $index) {
       <button role="tab" class="tab" [class.tab-active]="container === tab.value" (click)="setContainer(tab.value)">
         {{tab.label}}
@@ -15,7 +15,7 @@
   </div>
 </div>
 
-<div class="overflow-x-auto mt-3">
+<div class="overflow-x-auto px-2 mt-3">
   <table class="table bg-base-100 table-fixed w-full">
     <thead>
       <tr>
@@ -32,7 +32,7 @@
         class="hover:bg-base-200 cursor-pointer">
         <td class="w-2/9">
           <div class="flex items-center gap-3">
-            <div class="h-12 w-12">
+            <div class=" h-12 w-12">
               <img class="rounded-full" src="{{isInbox ? message.senderImageUrl 
                 || '/user.png' : message.recipientImageUrl || '/user.png'}}"
                 alt="image of member">

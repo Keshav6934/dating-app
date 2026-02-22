@@ -8,7 +8,9 @@
             class="select select-bordered select-xs w-16 focus:outline-none h-8"
         >
             @for (option of pageSizeOptions(); track option) {
-                <option [value]="option">{{option}}</option>
+                <option [value]="option" [selected]="option === pageSize()">
+                    {{option}}
+                </option>
             }
         </select>
     </div>
