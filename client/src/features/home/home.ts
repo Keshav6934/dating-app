@@ -1,18 +1,26 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Register } from "../account/register/register";
-import { User } from '../../types/user';
-import { required } from '@angular/forms/signals';
+import { AccountService } from '../../core/services/account-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   imports: [Register],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrl: './home.css'
 })
-export class Home {
+export class Home implements OnInit {
   protected registerMode = signal(false);
+  protected accountService = inject(AccountService);
+  private router = inject(Router);
 
-  showRegister(value: boolean){
+  ngOnInit(): void {
+    if (this.accountService.currentUser()) {
+      this.router.navigateByUrl('/members');
+    }
+  }
+
+  showRegister(value: boolean) {
     this.registerMode.set(value);
   }
 }
