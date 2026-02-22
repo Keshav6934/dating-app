@@ -47,8 +47,6 @@ export class AccountService {
   }
 
   startTokenRefreshInterval() {
-    // Interval ko 14 din se kam karke 1 ghante ya token expiry se pehle rakha jata hai
-    // Filhal ise browser session ke liye optimize kiya hai
     setInterval(() => {
       this.http.post<User>(this.baseUrl + 'account/refresh-token', {},
         { withCredentials: true }).subscribe({
@@ -56,7 +54,7 @@ export class AccountService {
             this.setCurrentUser(user)
           },
           error: () => {
-            this.logout()
+            this.logout().subscribe();
           }
         })
     }, 14 * 24 * 60 * 60 * 1000) 
@@ -64,10 +62,7 @@ export class AccountService {
 
   setCurrentUser(user: User) {
     user.roles = this.getRolesFromToken(user);
-    
-    // --- FIX: Reload par logout na ho isliye yahan save karein ---
     localStorage.setItem('user', JSON.stringify(user));
-    
     this.currentUser.set(user);
     this.likesService.getLikeIds();
     
@@ -77,17 +72,15 @@ export class AccountService {
   }
 
   logout() {
-    this.http.post(this.baseUrl + 'account/logout', {}, { withCredentials: true }).subscribe({
-      next: () => {
-        // --- FIX: Logout par storage saaf karein ---
+    return this.http.post(this.baseUrl + 'account/logout', {}, { withCredentials: true }).pipe(
+      tap(() => {
         localStorage.removeItem('user');
         localStorage.removeItem('filters');
-        
         this.likesService.clearLikeIds();
         this.currentUser.set(null);
         this.presenceService.stopHubConnection();
-      }
-    })
+      })
+    );
   }
 
   private getRolesFromToken(user: User): string[] {
